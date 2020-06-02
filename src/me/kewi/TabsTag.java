@@ -3,7 +3,9 @@ package me.kewi;
 import me.kewi.commands.TabsTagCommand;
 import me.kewi.listerners.Events;
 import me.kewi.manager.TagManager;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 
@@ -21,12 +23,7 @@ import java.io.File;
 
 public class TabsTag extends JavaPlugin {
 
-    private static TabsTag instance;
     private TagManager tagManager;
-
-    public static TabsTag getInstance() {
-        return instance;
-    }
 
     /**
      * Define the start addon parameters
@@ -35,13 +32,20 @@ public class TabsTag extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        instance = this;
         //start the tagmanager to manipule javaplugin system
         this.tagManager = new TagManager(this);
         //register join, quit and kick listerners
         getServer().getPluginManager().registerEvents(new Events(this), this);
         //register command to reload the system
         getServer().getPluginCommand("tabstag").setExecutor(new TabsTagCommand(this));
+        new BukkitRunnable(){
+
+            @Override
+            public void run() {
+                for (Player player : getServer().getOnlinePlayers())
+                    tagManager.update(player);
+            }
+        }.runTaskTimer(this, 20L,20L);
     }
 
     /**
@@ -61,7 +65,7 @@ public class TabsTag extends JavaPlugin {
      */
     public void checkConfig() {
         //get folder plugin
-        File folder = instance.getDataFolder();
+        File folder = this.getDataFolder();
         //make a dir if not exists
         if (!folder.exists())
             folder.mkdir();
