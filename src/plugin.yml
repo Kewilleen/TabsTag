@@ -1,0 +1,11 @@
+name: TabsTag
+main: me.kewi.TabsTag
+version: 1.0
+author: "Kewilleen Gomes"
+website: "www.devkewi.com.br"
+description: "A full featured tabs tag system."
+
+commands:
+  tabstag:
+    description: Execute tabstag info command
+    aliases: tt
