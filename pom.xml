@@ -38,11 +38,11 @@
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
 	</repositories>
-	<!-- Builds NametagEdit -->
+	<!-- Builds -->
 	<build>
 		<defaultGoal>clean package</defaultGoal>
 		<finalName>TabsTag</finalName>
-		<sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+		<sourceDirectory>${basedir}/src/me</sourceDirectory>
 		<resources>
 			<resource>
 				<targetPath>.</targetPath>
