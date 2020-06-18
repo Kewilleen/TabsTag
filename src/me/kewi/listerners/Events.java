@@ -16,17 +16,19 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public void onJoinEvent(PlayerJoinEvent event) {        tabsTag.getTagManager().update(event.getPlayer());
+    private void onJoinEvent(PlayerJoinEvent event) {
+        tabsTag.getTagManager().updateTeam(event.getPlayer());
     }
 
     @EventHandler
-    public void onQuitEvent(PlayerQuitEvent event) {
-        tabsTag.getTagManager().remove(event.getPlayer());
+    private void onQuitEvent(PlayerQuitEvent event) {
+        tabsTag.getTagManager().removeTeam(event.getPlayer());
     }
 
     @EventHandler
-    public void onKickEvent(PlayerKickEvent event) {
-        tabsTag.getTagManager().remove(event.getPlayer());
+    private void onKickEvent(PlayerKickEvent event) {
+        tabsTag.getTagManager().removeTeam(event.getPlayer());
     }
+
 
 }

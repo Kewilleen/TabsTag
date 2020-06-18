@@ -29,7 +29,7 @@ public class TabsTagCommand implements CommandExecutor {
             return true;
         }
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-            tabsTag.getTagManager().initialize();
+            tabsTag.getTagManager().reload();
             commandSender.sendMessage("§b[TabsTag] successfully reloaded");
             return true;
         }

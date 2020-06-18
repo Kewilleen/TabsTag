@@ -1,4 +1,6 @@
 Tags:
-  default: "&f"
-  #tabstag.<suatag>
+  default: "&r"
+  #Permission tabstag.<suatag>
+  #Example: tabstag.admin to player receive Admin tag
   Admin: "&4[Admin] &f"
+  VIP: "&e"

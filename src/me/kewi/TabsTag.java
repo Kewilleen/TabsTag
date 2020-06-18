@@ -10,78 +10,44 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 
 /**
- * TabsTag v1.0-ALPHA
+ * <h1>TabsTag Alfa</h1>
  *
- * This sample addon demonstrate a custom tag in head and tablist player on Minecraft Server
- *
+ * <p>This sample addon demonstrate a custom tag in head and tablist player on Minecraft Server</p>
  *
  * @author Kewilleen Gomes
- * @version 1.0
+ * @version 1.1
+ * @lastupdate 2020-06-17
  * @since 2020-06-02
- *
  */
 
 public class TabsTag extends JavaPlugin {
 
     private TagManager tagManager;
 
-    /**
-     * Define the start addon parameters
-     *
-     * An instance to call plugin reference
-     */
     @Override
     public void onEnable() {
-        //start the tagmanager to manipule javaplugin system
+        checkConfig();
         this.tagManager = new TagManager(this);
-        //register join, quit and kick listerners
-        getServer().getPluginManager().registerEvents(new Events(this), this);
-        //register command to reload the system
-        getServer().getPluginCommand("tabstag").setExecutor(new TabsTagCommand(this));
-        new BukkitRunnable(){
-
+        new BukkitRunnable() {
             @Override
             public void run() {
                 for (Player player : getServer().getOnlinePlayers())
-                    tagManager.update(player);
+                    tagManager.updateTeam(player);
             }
-        }.runTaskTimer(this, 20L,20L);
+        }.runTaskTimer(this, 20L, 20L);
+        getServer().getPluginManager().registerEvents(new Events(this), this);
+        getServer().getPluginCommand("tabstag").setExecutor(new TabsTagCommand(this));
     }
 
-    /**
-     * Disabilitin the system
-     *
-     * Remove all tags created
-     */
-    @Override
-    public void onDisable() {
-        tagManager.removeAllTeams();
-    }
-
-    /**
-     * Check file is created
-     *
-     * This determine create folder and saveDefaultConfig, however get automatic config
-     */
     public void checkConfig() {
-        //get folder plugin
         File folder = this.getDataFolder();
-        //make a dir if not exists
         if (!folder.exists())
             folder.mkdir();
-        //get a config "template" file
         File config = new File(folder, "config.yml");
         if (!config.exists())
             saveDefaultConfig();
     }
 
-    /**
-     * Call a Tag Manager system
-     *
-     * Where th system working
-     *
-     * @return TagManager
-     */
     public TagManager getTagManager() {
         return tagManager;
     }
