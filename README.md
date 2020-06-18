@@ -1,4 +1,5 @@
 # TabsTag
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4c73574104334e388f95a2ce5be6a750)](https://app.codacy.com/manual/Kewilleen/TabsTag?utm_source=github.com&utm_medium=referral&utm_content=Kewilleen/TabsTag&utm_campaign=Badge_Grade_Dashboard)
 
 A simple plugin that allows players to have a tag on the tablist, tag on the player's head and I added the health icon below the nickname
 
