@@ -46,9 +46,10 @@
 			<resource>
 				<targetPath>.</targetPath>
 				<filtering>false</filtering>
-				<directory>${basedir}/src/resources/</directory>
+				<directory>${basedir}/src/</directory>
 				<includes>
-					<include>*.*</include>
+					<include>config.yml</include>
+					<include>plugin.yml</include>
 				</includes>
 			</resource>
 		</resources>

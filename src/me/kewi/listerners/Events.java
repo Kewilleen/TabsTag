@@ -17,6 +17,7 @@ public class Events implements Listener {
 
     @EventHandler
     private void onJoinEvent(PlayerJoinEvent event) {
+        tabsTag.getTagManager().setHealth(event.getPlayer());
         tabsTag.getTagManager().updateTeam(event.getPlayer());
     }
 

@@ -5,7 +5,10 @@ import me.kewi.api.PlayerRemoveTagEvent;
 import me.kewi.api.PlayerSetTagEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.Set;
 
@@ -22,7 +25,6 @@ public class TagManager {
     public TagManager(TabsTag tabsTag) {
         this.tabsTag = tabsTag;
         this.scoreboard = tabsTag.getServer().getScoreboardManager().getMainScoreboard();
-        setHealth();
     }
 
     private Set<String> getTags() {
@@ -56,6 +58,7 @@ public class TagManager {
      */
     public void updateTeam(Player player) {
         String nickname = player.getName().toLowerCase();
+        setHealth(player);
         Team team = hasTeam(nickname) ? getTeam(nickname) : scoreboard.registerNewTeam(nickname);
         String finalTag = getTagFromConfig("default");
         for (String tag : getTags())
@@ -69,6 +72,8 @@ public class TagManager {
         if (tag.length() > 16)
             tag = tag.substring(0, 15);
         playerSetTagEvent.getTeam().setPrefix(tag);
+        if (playerSetTagEvent.getTeam().hasPlayer(player))
+            playerSetTagEvent.getTeam().removePlayer(player);
         playerSetTagEvent.getTeam().addPlayer(player);
     }
 
@@ -113,11 +118,17 @@ public class TagManager {
         }
     }
 
-    private void setHealth() {
-        if (scoreboard.getObjective("health") != null)
-            scoreboard.getObjective("health").unregister();
-        Objective objective = scoreboard.registerNewObjective("health", "health");
-        objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        objective.setDisplayName(ChatColor.RED + "❤");
+    /**
+     * Set player health icon
+     *
+     * @param player update player health icon
+     */
+    public void setHealth(Player player) {
+        if (scoreboard.getObjective("health") == null) {
+            Objective objective = scoreboard.registerNewObjective("health", "health");
+            objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+            objective.setDisplayName(ChatColor.RED + "❤");
+        }
+        player.setHealth(player.getHealth());
     }
 }
