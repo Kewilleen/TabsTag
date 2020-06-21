@@ -69,6 +69,7 @@ public class PlayerSetTagEvent extends Event {
         this.team = team;
     }
 
+
     @Override
     public HandlerList getHandlers() {
         return HANDLER_LIST;
