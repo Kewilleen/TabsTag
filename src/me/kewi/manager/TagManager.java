@@ -58,7 +58,6 @@ public class TagManager {
      */
     public void updateTeam(Player player) {
         String nickname = player.getName().toLowerCase();
-        setHealth(player);
         Team team = hasTeam(nickname) ? getTeam(nickname) : scoreboard.registerNewTeam(nickname);
         String finalTag = getTagFromConfig("default");
         for (String tag : getTags())
@@ -69,9 +68,14 @@ public class TagManager {
         PlayerSetTagEvent playerSetTagEvent = new PlayerSetTagEvent(player, finalTag, team);
         tabsTag.getServer().getPluginManager().callEvent(playerSetTagEvent);
         String tag = playerSetTagEvent.getTag();
+        if (tag == null)
+            return;
         if (tag.length() > 16)
             tag = tag.substring(0, 15);
         playerSetTagEvent.getTeam().setPrefix(tag);
+        String suffix = playerSetTagEvent.getTeam().getSuffix();
+        if (suffix != null)
+            playerSetTagEvent.getTeam().setSuffix(suffix);
         if (playerSetTagEvent.getTeam().hasPlayer(player))
             playerSetTagEvent.getTeam().removePlayer(player);
         playerSetTagEvent.getTeam().addPlayer(player);
