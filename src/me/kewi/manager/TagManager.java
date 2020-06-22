@@ -57,6 +57,7 @@ public class TagManager {
      * @param player Add team to player
      */
     public void updateTeam(Player player) {
+        removeTeam(player);
         String nickname = player.getName().toLowerCase();
         Team team = hasTeam(nickname) ? getTeam(nickname) : scoreboard.registerNewTeam(nickname);
         String finalTag = getTagFromConfig("default");
@@ -73,12 +74,8 @@ public class TagManager {
         if (tag.length() > 16)
             tag = tag.substring(0, 15);
         playerSetTagEvent.getTeam().setPrefix(tag);
-        String suffix = playerSetTagEvent.getTeam().getSuffix();
-        if (suffix != null)
-            playerSetTagEvent.getTeam().setSuffix(suffix);
-        if (playerSetTagEvent.getTeam().hasPlayer(player))
-            playerSetTagEvent.getTeam().removePlayer(player);
-        playerSetTagEvent.getTeam().addPlayer(player);
+        if(!playerSetTagEvent.getTeam().hasPlayer(player))
+            playerSetTagEvent.getTeam().addPlayer(player);
     }
 
     /**
@@ -113,13 +110,29 @@ public class TagManager {
     }
 
     /**
+     * Start task to auto-update
+     */
+    public void starTask() {
+        //if started, cancel all task
+        cancelTask();
+        tabsTag.getServer().getScheduler().runTaskTimer(tabsTag, () -> {
+            for (Player player : tabsTag.getServer().getOnlinePlayers())
+                updateTeam(player);
+        }, 20L, 20L * tabsTag.getConfig().getInt("Time.Update"));
+    }
+
+    /**
+     * Cancel tasks from plugin
+     */
+    private void cancelTask() {
+        tabsTag.getServer().getScheduler().cancelTasks(tabsTag);
+    }
+
+    /**
      * Remove all tags and put new tags to players
      */
     public void reload() {
-        for (Player player : tabsTag.getServer().getOnlinePlayers()) {
-            removeTeam(player);
-            updateTeam(player);
-        }
+        starTask();
     }
 
     /**

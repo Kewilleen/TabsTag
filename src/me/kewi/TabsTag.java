@@ -3,9 +3,7 @@ package me.kewi;
 import me.kewi.commands.TabsTagCommand;
 import me.kewi.listerners.Events;
 import me.kewi.manager.TagManager;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 
@@ -16,7 +14,6 @@ import java.io.File;
  *
  * @author Kewilleen Gomes
  * @version 1.1
- * @lastupdate 2020-06-17
  * @since 2020-06-02
  */
 
@@ -28,13 +25,7 @@ public class TabsTag extends JavaPlugin {
     public void onEnable() {
         checkConfig();
         this.tagManager = new TagManager(this);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : getServer().getOnlinePlayers())
-                    tagManager.updateTeam(player);
-            }
-        }.runTaskTimer(this, 20L, 20L);
+        tagManager.starTask();
         getServer().getPluginManager().registerEvents(new Events(this), this);
         getServer().getPluginCommand("tabstag").setExecutor(new TabsTagCommand(this));
     }
