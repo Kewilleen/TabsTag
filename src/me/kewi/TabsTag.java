@@ -25,7 +25,8 @@ public class TabsTag extends JavaPlugin {
     public void onEnable() {
         checkConfig();
         this.tagManager = new TagManager(this);
-        tagManager.starTask();
+        this.tagManager.removeAllTeams();
+        this.tagManager.starTask();
         getServer().getPluginManager().registerEvents(new Events(this), this);
         getServer().getPluginCommand("tabstag").setExecutor(new TabsTagCommand(this));
     }

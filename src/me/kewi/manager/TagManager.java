@@ -57,24 +57,34 @@ public class TagManager {
      * @param player Add team to player
      */
     public void updateTeam(Player player) {
-        removeTeam(player);
         String nickname = player.getName().toLowerCase();
-        Team team = hasTeam(nickname) ? getTeam(nickname) : scoreboard.registerNewTeam(nickname);
+        Team team = hasTeam(nickname) ? getTeam(nickname) : this.scoreboard.registerNewTeam(nickname);
+        updateTeam(player, team);
+    }
+
+    /**
+     * Update team from player
+     *
+     * @param player require to update team
+     * @param team   team to set in player
+     */
+    public void updateTeam(Player player, Team team) {
         String finalTag = getTagFromConfig("default");
-        for (String tag : getTags())
-            if (player.hasPermission("tabstag." + tag) && !tag.equalsIgnoreCase("default")) {
-                finalTag = getTagFromConfig(tag);
+        for (String str : getTags()) {
+            if (player.hasPermission("tabstag." + str) && !str.equalsIgnoreCase("default")) {
+                finalTag = getTagFromConfig(str);
                 break;
             }
+        }
         PlayerSetTagEvent playerSetTagEvent = new PlayerSetTagEvent(player, finalTag, team);
-        tabsTag.getServer().getPluginManager().callEvent(playerSetTagEvent);
+        this.tabsTag.getServer().getPluginManager().callEvent(playerSetTagEvent);
         String tag = playerSetTagEvent.getTag();
         if (tag == null)
             return;
         if (tag.length() > 16)
             tag = tag.substring(0, 15);
         playerSetTagEvent.getTeam().setPrefix(tag);
-        if(!playerSetTagEvent.getTeam().hasPlayer(player))
+        if (!playerSetTagEvent.getTeam().hasPlayer(player))
             playerSetTagEvent.getTeam().addPlayer(player);
     }
 
@@ -88,7 +98,13 @@ public class TagManager {
         return getString("Tags." + tag);
     }
 
-    private String getString(String path) {
+    /**
+     * Get string tag
+     *
+     * @param path path to get format tag
+     * @return get tag with color replaced
+     */
+    public String getString(String path) {
         return tabsTag.getConfig().getString(path).replaceAll("&", "§");
     }
 
@@ -101,9 +117,8 @@ public class TagManager {
         String nickname = player.getName().toLowerCase();
         if (!hasTeam(nickname))
             return;
-        Team team = getTeam(nickname);
-        PlayerRemoveTagEvent playerRemoveTagEvent = new PlayerRemoveTagEvent(player, team.getPrefix(), team);
-        tabsTag.getServer().getPluginManager().callEvent(playerRemoveTagEvent);
+        PlayerRemoveTagEvent playerRemoveTagEvent = new PlayerRemoveTagEvent(player, getTeam(nickname));
+        this.tabsTag.getServer().getPluginManager().callEvent(playerRemoveTagEvent);
         if (playerRemoveTagEvent.isCancelled())
             return;
         playerRemoveTagEvent.getTeam().unregister();
@@ -113,7 +128,6 @@ public class TagManager {
      * Start task to auto-update
      */
     public void starTask() {
-        //if started, cancel all task
         cancelTask();
         tabsTag.getServer().getScheduler().runTaskTimer(tabsTag, () -> {
             for (Player player : tabsTag.getServer().getOnlinePlayers())
@@ -147,5 +161,10 @@ public class TagManager {
             objective.setDisplayName(ChatColor.RED + "❤");
         }
         player.setHealth(player.getHealth());
+    }
+
+    public void removeAllTeams() {
+        for (Team team : this.scoreboard.getTeams())
+            team.unregister();
     }
 }

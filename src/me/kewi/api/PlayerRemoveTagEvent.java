@@ -15,13 +15,11 @@ public class PlayerRemoveTagEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private boolean cancelled;
-    private Player player;
-    private String tag;
+    private final Player player;
     private Team team;
 
-    public PlayerRemoveTagEvent(Player player, String tag, Team team) {
+    public PlayerRemoveTagEvent(Player player, Team team) {
         this.player = player;
-        this.tag = tag;
         this.team = team;
     }
 
@@ -32,15 +30,6 @@ public class PlayerRemoveTagEvent extends Event implements Cancellable {
      */
     public Player getPlayer() {
         return player;
-    }
-
-    /**
-     * Get current tag
-     *
-     * @return Full tag of this Player
-     */
-    public String getTag() {
-        return tag;
     }
 
     /**
